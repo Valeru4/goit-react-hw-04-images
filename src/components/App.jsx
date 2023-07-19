@@ -5,6 +5,7 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { fetchImages } from 'services/api';
 import { Loader } from './Loader/Loader';
 import { Modal } from './Modal/Modal';
+import Notiflix from 'notiflix';
 
 export const App = () => {
   const [images, setImages] = useState([]);
@@ -46,6 +47,12 @@ export const App = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      Notiflix.Notify.failure('Your request is failure');
+    }
+  }, [error]);
 
   const handleSubmit = searchQuery => {
     setImages([]);
