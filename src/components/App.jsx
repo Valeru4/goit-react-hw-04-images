@@ -26,9 +26,9 @@ export const App = () => {
   const fetchImagesData = async (searchQuery, currentPage) => {
     try {
       const response = await fetchImages(searchQuery, currentPage);
-      if (response.hits.length === 0) {
-        alert('Nothing found!');
-      }
+      // if (response.hits.length === 0) {
+      //   alert('Nothing found!');
+      // }
 
       const images = response.hits.map(
         ({ id, tags, webformatURL, largeImageURL }) => ({
@@ -42,7 +42,7 @@ export const App = () => {
       setImages(prevState => [...prevState, ...images]);
       setTotalHits(response.totalHits);
     } catch (error) {
-      setError('No images are showing');
+      setError(Notiflix.Notify.failure('Your request is failure'));
     } finally {
       setIsLoading(false);
     }
