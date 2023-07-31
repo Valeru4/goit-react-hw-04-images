@@ -11,19 +11,19 @@ export const App = () => {
   const [images, setImages] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalHits, setTotalHits] = useState([]);
+  const [totalHits, setTotalHits] = useState(0);
   const [error, setError] = useState(null);
   const [modal, setModal] = useState({ isOpen: false, largeImageURL: '' });
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (searchQuery && currentPage) {
-      setIsLoading(true);
-      fetchImagesData(searchQuery, currentPage);
-    }
+    if (!searchQuery) return;
+    fetchImagesData(searchQuery, currentPage);
   }, [searchQuery, currentPage]);
 
   const fetchImagesData = async (searchQuery, currentPage) => {
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await fetchImages(searchQuery, currentPage);
       // if (response.hits.length === 0) {
@@ -42,7 +42,7 @@ export const App = () => {
       setImages(prevState => [...prevState, ...images]);
       setTotalHits(response.totalHits);
     } catch (error) {
-      setError(Notiflix.Notify.failure('Your request is failure'));
+      setError('Your request is failure');
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +50,7 @@ export const App = () => {
 
   useEffect(() => {
     if (error) {
-      Notiflix.Notify.failure('Your request is failure');
+      Notiflix.Notify.failure(error);
     }
   }, [error]);
 
@@ -58,6 +58,7 @@ export const App = () => {
     setImages([]);
     setCurrentPage(1);
     setSearchQuery(searchQuery);
+    setTotalHits(0);
   };
 
   const loadMore = event => {
